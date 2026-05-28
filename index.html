@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>8&amp;Co. Size Navigator</title>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F1EDE8;--ink:#222222;--sub:#333333;--line:rgba(79,79,79,.16);--acc:#D2B48C;--acc2:#8E9DB2;--font:'Urbanist','Noto Sans JP',sans-serif;--brand-grey:#7e7672}
+::placeholder{color:rgba(79,79,79,.55) !important;font-weight:300 !important;opacity:1 !important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:300;min-height:100vh;display:flex;flex-direction:column;align-items:center;letter-spacing:.04em;overflow-wrap:break-word;word-break:keep-all}
+#back-btn{position:fixed;top:14px;left:14px;z-index:500;background:rgba(241,237,232,.92);backdrop-filter:blur(6px);border:1px solid var(--line);padding:8px 14px;font-family:var(--font);font-size:10px;color:var(--sub);cursor:pointer;letter-spacing:.12em;text-transform:uppercase;transition:all .2s;display:none;white-space:nowrap}
+#back-btn:hover{color:var(--ink);border-color:var(--ink)}
+.hd{width:100%;max-width:600px;text-align:center;padding:52px 24px 28px}
+.hd img{width:100px;height:100px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px}
+.hd h1{font-size:14px;font-weight:400;letter-spacing:.22em;text-transform:uppercase}
+.hd p{font-size:9px;color:var(--sub);letter-spacing:.14em;margin-top:5px;text-transform:uppercase}
+.hd-sub{font-size:10px;color:var(--sub);margin-top:12px;line-height:1.6;letter-spacing:.06em}
+.box{width:100%;max-width:600px;padding:0 20px 80px}
+.prog{display:flex;align-items:center;justify-content:center;margin-bottom:32px}
+.pdot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--sub);transition:.3s;flex-shrink:0}
+.pdot.on{border-color:var(--acc);background:var(--acc);color:var(--ink)}.pdot.done{border-color:var(--brand-grey);background:var(--brand-grey);color:#fff}
+.pline{flex:1;max-width:40px;height:1px;background:var(--line);margin:0 3px;transition:.3s}.pline.done{background:var(--brand-grey)}
+.sec{display:none}
+.sl{font-size:9px;color:var(--acc2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px}
+.course-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+.cc{border:1px solid var(--line);padding:24px 16px 20px;cursor:pointer;background:#fff;transition:.2s;text-align:center;display:flex;flex-direction:column;align-items:center}
+.cc:hover,.cc:focus{border-color:var(--acc);outline:none}
+.cc-badge{font-size:8px;color:var(--acc2);letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid var(--brand-grey);padding-bottom:5px;display:inline-block}
+.cc-title{font-size:16px;font-family:'Georgia',serif;letter-spacing:.08em;margin-bottom:10px;line-height:1.5}
+.cc-desc{font-size:10px;color:var(--sub);line-height:1.8;margin-bottom:12px;flex:1}
+.cc-time{font-size:9px;color:var(--acc2);letter-spacing:.1em;border:1px solid var(--line);padding:4px 10px}
+.f-group{margin-bottom:12px}
+.f-group label{display:block;font-size:11px;color:var(--sub);letter-spacing:.1em;margin-bottom:5px}
+.f-group input{width:100%;padding:14px 16px;background:#fff;border:1px solid var(--line);font-family:var(--font);font-size:16px;color:var(--ink);outline:none;border-radius:0;-webkit-appearance:none}
+.f-group input:focus{border-color:var(--acc)}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:block;width:100%;padding:18px;background:var(--brand-grey);color:#fff;border:none;font-family:var(--font);font-size:12px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;margin-top:14px}
+.btn:hover{opacity:.8}
+.btn-sub{display:block;width:100%;padding:13px;background:transparent;border:1px solid var(--sub);color:var(--sub);font-family:var(--font);font-size:11px;letter-spacing:.1em;cursor:pointer;transition:.2s;margin-top:8px}
+.btn-sub:hover{border-color:var(--ink);color:var(--ink)}
+.bt-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.bt{border:1px solid var(--line);padding:16px 20px;cursor:pointer;transition:.2s;background:#fff;display:flex;justify-content:space-between;align-items:center;min-height:70px}
+.bt:hover{border-color:var(--acc)}.bt-name{font-size:13px;letter-spacing:.1em;font-weight:500;text-align:left}.bt-desc{font-size:10px;color:var(--sub);margin-top:5px;line-height:1.6;text-align:left}.bt-arr{font-size:16px;color:var(--line);flex-shrink:0;margin-left:12px}.bt:hover .bt-arr{color:var(--acc)}
+.illust-row{display:flex;gap:12px;margin-bottom:14px}
+.illust-row img{width:110px;flex-shrink:0;object-fit:contain}
+.illust-note{font-size:10px;color:var(--sub);line-height:2.1}
+.hint{font-size:10px;color:var(--sub);margin-bottom:12px;line-height:1.8;padding:10px 12px;background:rgba(79,79,79,.04);border-left:2px solid var(--line)}
+.err{display:none;font-size:11px;color:#B28E8E;padding:8px 0 2px}
+#result .sl { text-align: center; margin-top: 24px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); display: block; letter-spacing: 0.25em; clear: both; }
+.r-summary{font-size:13px;color:var(--ink);text-align:center;letter-spacing:.08em;padding:0 0 28px;line-height:1.9;display:block;margin-top:0;clear:both;word-break:keep-all;overflow-wrap:anywhere}
+.r-warn{font-size:10px;color:var(--sub);line-height:1.8;padding:14px 16px;background:rgba(210,180,140,.1);border-left:2px solid var(--acc);margin-bottom:28px;text-align:left;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
+.cand-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;align-items:stretch}
+.cand{border:1px solid var(--line);padding:0 16px 20px;background:#fff;display:flex;flex-direction:column;height:100%}
+.cand.rec{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.rec-badge{font-size:9px;background:var(--acc);color:var(--ink);height:28px;line-height:28px;letter-spacing:.12em;text-align:center;margin:0 -16px 16px;text-transform:uppercase}
+.no-badge{height:28px;margin-bottom:16px}
+.cand-fit{font-size:9px;color:var(--sub);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;height:13px;line-height:13px}
+.cand-name{font-size:24px;letter-spacing:.14em;font-family:'Georgia',serif;margin-bottom:8px;height:34px;display:flex;align-items:center}
+.cand-lbl{font-size:10px;color:var(--sub);margin-bottom:18px;height:16px;line-height:16px}
+.cand-btn{display:block;width:100%;height:46px;line-height:46px;padding:0 8px;background:var(--brand-grey);color:#fff;border:none;font-family:var(--font);font-size:11px;letter-spacing:.12em;cursor:pointer;transition:opacity .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:auto}
+.cand-btn:hover{opacity:.8}
+.tbl-sec{margin-top:28px}
+.tbl-title{font-size:9px;color:var(--sub);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:14px}
+.sz-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.sz-tbl th{background:var(--brand-grey);color:#fff;padding:10px 8px;font-weight:300;letter-spacing:.08em}
+.sz-tbl td{padding:10px 8px;border-bottom:.5px solid var(--line);text-align:center}
+.sz-tbl tr.hl td{background:rgba(210,180,140,.14);font-weight:500}
+.reset-wrap{text-align:center;margin-top:40px}
+.btn-reset{background:none;border:none;font-family:var(--font);font-size:11px;color:var(--sub);cursor:pointer;letter-spacing:.1em;padding:10px;text-decoration:underline}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(79,79,79,.55);backdrop-filter:blur(4px);z-index:9000;justify-content:center;align-items:flex-end}
+@media(min-width:500px){.modal-ov{align-items:center;padding:20px}}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--bg);width:100%;max-width:480px;padding:22px 22px 28px;position:relative;max-height:88vh;overflow-y:auto;animation:mup .25s ease}
+@keyframes mup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--sub);cursor:pointer;line-height:1}
+.modal-hdr{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.modal-ey{font-size:13px;color:var(--acc2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px}
+.modal-name{font-family:'Georgia',serif;font-size:30px;letter-spacing:.14em}
+
+.modal-col-label{font-size:13px;color:var(--sub);letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.modal-col-label .req{font-size:9px;color:var(--bg);background:var(--brand-grey);padding:3px 6px;border-radius:2px;letter-spacing:.1em;font-weight:400;text-transform:none}
+.modal-chips{display:flex;gap:10px;margin-bottom:20px}
+.modal-chip{flex:1;padding:14px 30px 14px 12px;border:2px solid var(--line);background:#fff;font-family:var(--font);font-size:16px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:all .2s;font-weight:500;position:relative}
+.modal-chip:hover{border-color:var(--acc)}.modal-chip.sel{border-color:var(--ink);background:#fff;color:var(--ink)}
+.modal-chip::after{content:'';position:absolute;top:50%;right:12px;transform:translateY(-50%);width:18px;height:18px;background-size:contain;background-repeat:no-repeat;opacity:0;transition:.2s;}
+.modal-chip.sel::after{opacity:1;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%23222"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>');}
+.modal-chip.sel .msw{border-color:var(--line)}
+.msw{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,0.1)}
+.modal-go{display:block;width:100%;padding:22px;background:var(--brand-grey);color:#fff;border:none;font-family:var(--font);font-size:16px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;font-weight:500}
+.modal-go:hover{opacity:.85}.modal-go:disabled{opacity:.35;cursor:default}
+@media(max-width:460px){.course-wrap{grid-template-columns:1fr}.cand-wrap{grid-template-columns:1fr}}
+
+.modal-adv{font-size:14px;color:var(--ink);line-height:1.8;margin-bottom:14px;padding:16px 16px;background:#fff;border-left:3px solid var(--acc);word-break:break-all;white-space:normal}
+.modal-adv-main{font-size:16px;font-weight:500;margin-bottom:6px}
+.modal-adv-note{font-size:13px;color:var(--sub);margin-bottom:12px}
+.modal-adv-row{display:flex;gap:10px;align-items:flex-start}
+.modal-adv-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.modal-adv-title{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;margin-bottom:4px}
+.modal-adv-body{font-size:13px;color:var(--sub);line-height:1.75}
+.modal-line-area{border:1px solid var(--line);padding:16px 16px;margin-bottom:18px;background:#fff;word-break:break-all;white-space:normal}
+.modal-line-area-inner{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+.modal-line-btn{display:block;width:100%;padding:14px;text-align:center;background:transparent;border:1px solid var(--acc2);color:var(--ink);text-decoration:none;font-family:var(--font);font-size:15px;letter-spacing:.12em;transition:.2s;font-weight:500}
+.modal-line-btn:hover{background:rgba(142,157,178,.1)}
+
+/* スマホ表示時の青文字化（リンク化）防止 */
+.cc-title, .cc-desc, .cc-time, .cc-badge, .bt-name, .bt-desc { color: var(--ink) !important; text-decoration: none !important; }
+
+/* ミニ表の基本スタイル */
+.modal-mini-tbl { width: 100%; border-collapse: collapse; margin-top: 14px; text-align: center; }
+.modal-mini-tbl th { background: var(--brand-grey); color: #fff; padding: 6px 4px; font-weight: 300; letter-spacing: 0.02em; white-space: nowrap; }
+.modal-mini-tbl td { padding: 8px 4px; border-bottom: 1px solid var(--line); font-weight: 500; white-space: nowrap; }
+.modal-illust { width: 100%; max-width: 240px; display: block; margin: 16px auto; }
+
+/* トースト通知 */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(34,34,34,.92);backdrop-filter:blur(8px);color:#fff;padding:14px 28px;font-family:var(--font);font-size:13px;letter-spacing:.06em;line-height:1.6;z-index:10000;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;max-width:90vw;text-align:center;border-left:3px solid #B28E8E}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+
+/* デバイス別の文字サイズ・バランス調整（極限まで拡大） */
+@media screen and (max-width: 599px) {
+  .hd h1 { font-size: 18px; }
+  .hd p, .sz-tbl th, .cand-fit { font-size: 12px; }
+  .hd-sub { font-size: 11px; margin-top: 14px; }
+  .sl, .cc-desc, .bt-desc, .cand-lbl { font-size: 13px; }
+  #result .sl { font-size: 14px; margin-top: 16px; margin-bottom: 16px; padding-bottom: 16px; }
+  .r-summary { font-size: 14px; padding-bottom: 32px; }
+  .r-warn { font-size: 13px; }
+  .f-group label, .cand-btn, .sz-tbl { font-size: 14px; }
+  .btn { font-size: 15px; }
+  .bt-name { font-size: 16px; }
+  .cc-title { font-size: 20px; }
+  .cand-name { font-size: 28px; }
+  /* モーダル内を一回り大きく */
+  .modal-ey { font-size: 13px; }
+  .modal-col-label, .modal-adv-note, .modal-adv-body { font-size: 14px; }
+  .modal-adv, .modal-adv-title { font-size: 15px; }
+  .modal-line-btn { font-size: 16px; }
+  .modal-chip, .modal-go, .modal-adv-main { font-size: 17px; }
+  .modal-name { font-size: 32px; }
+  /* ミニ表（1行に収めるため縮小） */
+  .modal-mini-tbl th { font-size: 9px; padding: 4px 2px; letter-spacing: 0; }
+  .modal-mini-tbl td { font-size: 11px; padding: 6px 2px; }
+  .toast { font-size: 12px; padding: 12px 20px; }
+}
+@media screen and (min-width: 600px) {
+  .hd h1 { font-size: 20px; }
+  .hd p, .sz-tbl th, .cand-fit { font-size: 13px; }
+  .hd-sub { font-size: 12px; margin-top: 14px; }
+  .sl, .cc-desc, .bt-desc, .cand-lbl { font-size: 14px; }
+  #result .sl { font-size: 16px; margin-top: 24px; margin-bottom: 20px; padding-bottom: 20px; }
+  .r-summary { font-size: 15px; padding-bottom: 40px; }
+  .r-warn { font-size: 14px; }
+  .f-group label, .cand-btn, .sz-tbl { font-size: 15px; }
+  .btn { font-size: 16px; }
+  .bt-name { font-size: 18px; }
+  .cc-title { font-size: 22px; }
+  .cand-name { font-size: 32px; }
+  /* モーダル内を一回り大きく */
+  .modal-ey { font-size: 14px; }
+  .modal-col-label, .modal-adv-note, .modal-adv-body { font-size: 15px; }
+  .modal-adv, .modal-adv-title { font-size: 16px; }
+  .modal-line-btn { font-size: 17px; }
+  .modal-chip, .modal-go, .modal-adv-main { font-size: 18px; }
+  .modal-name { font-size: 36px; }
+  /* ミニ表（1行に収めるため縮小） */
+  .modal-mini-tbl th { font-size: 11px; padding: 6px 4px; letter-spacing: 0; }
+  .modal-mini-tbl td { font-size: 12px; padding: 8px 4px; }
+  .toast { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+<button id="back-btn">← 測り直す</button>
+<header class="hd">
+  <img src="ロゴ.png" alt="8&amp;Co.">
+  <h1>Size Navigator</h1>
+  <p>8&amp;Co. Precision Fit Algorithm</p>
+  <div class="hd-sub">独自のアルゴリズムにより最適なサイズデータをリアルタイムで集計・判定します</div>
+</header>
+<div class="box">
+  <div class="prog">
+    <div class="pdot on" id="pd1">1</div><div class="pline" id="pl1"></div>
+    <div class="pdot" id="pd2">2</div><div class="pline" id="pl2"></div>
+    <div class="pdot" id="pd3">3</div>
+  </div>
+  <div id="s0">
+    <div class="sl">Step 1 &mdash; 診断コースを選んでください</div>
+    <div class="course-wrap">
+      <button class="cc" id="btn-course-a" type="button">
+        <div class="cc-badge">Course A</div>
+        <div class="cc-title">体重から<br>かんたんに</div>
+        <div class="cc-desc">体重と体型を<wbr>入力するだけ。<wbr>最短で判定できます。</div>
+        <span class="cc-time">約1分</span>
+      </button>
+      <button class="cc" id="btn-course-b" type="button">
+        <div class="cc-badge">Course B</div>
+        <div class="cc-title">より詳しく<br>調べる</div>
+        <div class="cc-desc">首回り・胴回り・着丈の<wbr>実寸で<wbr>精度を上げて<wbr>判定します。</div>
+        <span class="cc-time">約2分</span>
+      </button>
+    </div>
+  </div>
+  <div id="s1a" class="sec">
+    <div class="sl">Step 2 &mdash; 体重を入力してください</div>
+    <div class="f-group">
+      <label>体重 (kg)&emsp;<span style="font-size:9px;color:var(--sub)">半角数字で入力</span></label>
+      <input id="wi" type="text" inputmode="decimal" placeholder="例：7">
+    </div>
+    <div class="err" id="w-err">有効な体重（0.1〜40kg）を半角数字で入力してください。</div>
+    <button class="btn" id="btn-next-bt" type="button">次のステップへ →</button>
+    <button class="btn-sub" id="btn-back-s1a" type="button">← コース選択に戻る</button>
+  </div>
+  <div id="s2a" class="sec">
+    <div class="sl">Step 2 &mdash; 体型を選んでください</div>
+    <div class="bt-wrap">
+      <button class="bt" id="btn-bt-std" type="button">
+        <div><div class="bt-name">A. 標準タイプ</div><div class="bt-desc">チワワから<wbr>レトリバーまで<wbr>一般的な体型</div></div>
+        <span class="bt-arr">→</span>
+      </button>
+      <button class="bt" id="btn-bt-lng" type="button">
+        <div><div class="bt-name">B. 胴長タイプ</div><div class="bt-desc">ミニチュアダックスフントなど<wbr>胴が長め</div></div>
+        <span class="bt-arr">→</span>
+      </button>
+      <button class="bt" id="btn-bt-spc" type="button">
+        <div><div class="bt-name">C. 特殊体型</div><div class="bt-desc">フレブル・パグ・ボストンなど<wbr>短頭・胸厚</div></div>
+        <span class="bt-arr">→</span>
+      </button>
+    </div>
+    <button class="btn-sub" id="btn-back-s2a" type="button">← 体重入力に戻る</button>
+  </div>
+  <div id="s1b" class="sec">
+    <div class="sl">Step 2 &mdash; 体重と実測値を入力してください</div>
+    <div class="illust-row">
+      <img src="size_illust.webp" alt="測り方">
+      <div class="illust-note">
+        <div>① 首回り：首の付け根（最も太い部分）</div>
+        <div>② 胴回り：前脚付け根（最も太い部分）</div>
+        <div>③ 着丈：首の付け根〜尾の付け根</div>
+        <p style="font-size:9px;margin-top:6px">※ メジャーと体の間に指1本のゆとりを持たせて計測。</p>
+      </div>
+    </div>
+    <div class="hint">すべて <strong>半角数字</strong> で入力してください（例：28）</div>
+    <div class="f-group">
+      <label>体重 (kg)</label>
+      <input id="bw" type="text" inputmode="decimal" placeholder="例：7">
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>① 首回り (cm)</label><input id="b-neck" type="text" inputmode="decimal" placeholder="例：28"></div>
+      <div class="f-group"><label>② 胴回り (cm)</label><input id="b-girth" type="text" inputmode="decimal" placeholder="例：38"></div>
+    </div>
+    <div class="f-group"><label>③ 着丈 (cm)</label><input id="b-len" type="text" inputmode="decimal" placeholder="例：26"></div>
+    <div class="err" id="b-err">すべての項目を半角数字で入力してください。</div>
+    <button class="btn" id="btn-run-b" type="button">この数値でシミュレーションする</button>
+    <button class="btn-sub" id="btn-back-s1b" type="button">← コース選択に戻る</button>
+  </div>
+  <div id="result" class="sec">
+    <div class="sl">Step 3 &mdash; Size Recommendation</div>
+    <div class="r-summary" id="r-summary"></div>
+    <div class="cand-wrap" id="cand-grid"></div>
+    <div class="tbl-sec sec" id="tbl-sec">
+      <div class="r-warn">※AI判定はあくまで目安となります。個体差等により異なる場合があるため、必ず下部のサイズ表をしっかりご確認の上、ご購入をお願いいたします。</div>
+      <div class="tbl-title">Size Chart &mdash; 製品寸法表 (cm)</div>
+      <div id="tbl-inner"></div>
+    </div>
+    <div class="reset-wrap"><button class="btn-reset" id="btn-reset" type="button">他のわんちゃんのサイズも調べる</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="sz-ov">
+  <div class="modal-box">
+    <button class="modal-x" id="modal-close" type="button">&#x2715;</button>
+    <div class="modal-hdr">
+      <div class="modal-ey">Selected Size</div>
+      <div class="modal-name" id="sz-name">&mdash;</div>
+    </div>
+    <div class="modal-adv">
+      <p class="modal-adv-main">愛犬のサイズにお間違いはありませんか？</p>
+      <p class="modal-adv-note">※ メジャーと体の間に指1〜2本分（約1〜2cm）のゆとりを持たせた実寸を基準にお選びください。</p>
+      <img src="size_illust (2)７箇所.webp" alt="測り方イラスト" class="modal-illust">
+      <div id="modal-mini-tbl-container"></div>
+    </div>
+    <div class="modal-col-label">Select Color <span class="req">必須</span></div>
+    <div class="modal-chips">
+      <button class="modal-chip" id="mc-lgr" type="button">
+        <span class="msw" style="background:#ded5d3"></span>ライトグレー
+      </button>
+      <button class="modal-chip" id="mc-sumi" type="button">
+        <span class="msw" style="background:#7e7672"></span>スミクロ
+      </button>
+    </div>
+    <div class="modal-adv" style="margin-top:0">
+      <div class="modal-adv-row">
+        <div>
+          <div class="modal-adv-title">丈の長さがご不安なオーナー様へ</div>
+          <div class="modal-adv-body">袖丈は袖口のロールアップで調整可能。美しいラインのまま、すっきりとご着用いただけます。</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-line-area">
+      <div class="modal-line-area-inner">
+        <div>
+          <div class="modal-adv-title" style="margin-bottom:4px">セミオーダー・サイズのご相談</div>
+          <div class="modal-adv-body">特別なサイズをご希望の場合は公式LINEよりお気軽にご相談ください。</div>
+        </div>
+      </div>
+      <a href="https://lin.ee/ye7VJkR" target="_blank" rel="noopener" class="modal-line-btn">公式LINEで相談する →</a>
+    </div>
+    <button class="modal-go" id="modal-go-btn" type="button" disabled>このカラーで商品ページへ →</button>
+  </div>
+</div>
+<div class="toast" id="toast-notify"></div>
+<script>
+/* Shopify 商品URL設定 */
+var BASE = 'https://8-co.jp';
+
+/* サイズ区分 → 商品ハンドル */
+var HANDLE_MAP = {
+  'SMB': 'wear-chihuahua',
+  'DAX': 'wear-miniaturedachshund',
+  'SHB': 'wear-shibainu',
+  'GDR': 'wear-goldenretriever',
+  'PUG': 'wear-pug',
+  'FBD': 'wear-frenchbulldog',
+  'BST': 'wear-bostonterrier'
+};
+
+/* ================================================================
+ * 商品データの難読化（Base64による簡易暗号化）
+ * ソースコード上で略称コードやURLの対応表が解読されないようにする措置
+ * ================================================================ */
+var ENCODED_DATA = "eyJ1IjogeyJTTUIiOiAiL2NvbGxlY3Rpb25zL3NtYWxsLWJyZWVkL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUU2JUE4JTk5JUU2JUJBJTk2JUU0JUJEJTkzJUU1JTlFJThCLSVFNSVCMCU4RiVFNSU5RSU4QiVFNyU4QSVBQyIsICJEQVgiOiAiL2NvbGxlY3Rpb25zL3NtYWxsLWJyZWVkL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUU4JTgzJUI0JUU5JTk1JUI3LSVFNyU5RiVBRCVFOCVCNiVCMyVFNCVCRCU5MyVFNSU5RSU4QiIsICJQVUciOiAiL2NvbGxlY3Rpb25zL3NtYWxsLWJyZWVkL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUU5JUE2JTk2JUU1JUE0JUFBLSVFMyU4MSU4QyVFMyU4MSVBMyVFMyU4MSU5NyVFMyU4MiU4QSVFNCVCRCU5MyVFNSU5RSU4QiIsICJGQkQiOiAiL2NvbGxlY3Rpb25zL3NtYWxsLWJyZWVkL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUUzJTgyJUFDJUUzJTgzJTgzJUUzJTgzJTgxJUUzJTgzJUFBJUU0JUJEJTkzJUU1JTlFJThCLSVFMyU4MyU5NSVFMyU4MyVBQyVFMyU4MyU5NiVFMyU4MyVBQiIsICJCU1QiOiAiL2NvbGxlY3Rpb25zL3NtYWxsLWJyZWVkL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUU4JTgzJUI4JUU1JThFJTlBLSVFMyU4MiVBMiVFMyU4MiVCOSVFMyU4MyVBQSVFMyU4MyVCQyVFMyU4MyU4OCVFNCVCRCU5MyVFNSU5RSU4QiIsICJTSEIiOiAiL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUU2JUE4JTk5JUU2JUJBJTk2JUU0JUJEJTkzJUU1JTlFJThCLSVFNCVCOCVBRCVFNSU5RSU4QiVFNyU4QSVBQyIsICJHRFIiOiAiL3Byb2R1Y3RzL3ByZW1pdW0tZG9nLXdlYXItJUU2JUE4JTk5JUU2JUJBJTk2JUU0JUJEJTkzJUU1JTlFJThCLSVFNSVBNCVBNyVFNSU5RSU4QiVFNyU4QSVBQyJ9LCAiaCI6IHsiU01CIjogInByZW1pdW0tZG9nLXdlYXItJUU2JUE4JTk5JUU2JUJBJTk2JUU0JUJEJTkzJUU1JTlFJThCLSVFNSVCMCU4RiVFNSU5RSU4QiVFNyU4QSVBQyIsICJEQVgiOiAicHJlbWl1bS1kb2ctd2Vhci0lRTglODMlQjQlRTklOTUlQjctJUU3JTlGJUFEJUU4JUI2JUIzJUU0JUJEJTkzJUU1JTlFJThCIiwgIlBVRyI6ICJwcmVtaXVtLWRvZy13ZWFyLSVFOSVBNiU5NiVFNSVBNCVBQS0lRTMlODElOEMlRTMlODElQTMlRTMlODElOTclRTMlODIlOEElRTQlQkQlOTMlRTUlOUUlOEIiLCAiRkJEIjogInByZW1pdW0tZG9nLXdlYXItJUUzJTgyJUFDJUUzJTgzJTgzJUUzJTgzJTgxJUUzJTgzJUFBJUU0JUJEJTkzJUU1JTlFJThCLSVFMyU4MyU5NSVFMyU4MyVBQyVFMyU4MyU5NiVFMyU4MyVBQiIsICJCU1QiOiAicHJlbWl1bS1kb2ctd2Vhci0lRTglODMlQjglRTUlOEUlOUEtJUUzJTgyJUEyJUUzJTgyJUI5JUUzJTgzJUFBJUUzJTgzJUJDJUUzJTgzJTg4JUU0JUJEJTkzJUU1JTlFJThCIiwgIlNIQiI6ICJwcmVtaXVtLWRvZy13ZWFyLSVFNiVBOCU5OSVFNiVCQSU5NiVFNCVCRCU5MyVFNSU5RSU4Qi0lRTQlQjglQUQlRTUlOUUlOEIlRTclOEElQUMiLCAiR0RSIjogInByZW1pdW0tZG9nLXdlYXItJUU2JUE4JTk5JUU2JUJBJTk2JUU0JUJEJTkzJUU1JTlFJThCLSVFNSVBNCVBNyVFNSU5RSU4QiVFNyU4QSVBQyJ9LCAicyI6IHsiTEdSIjogIkxHUiIsICJTVU1JIjogIlNVTUkifSwgInYiOiB7IlNNQiI6ICI0NTUyNTM5MDI2MjQ1MSIsICJEQVgiOiAiNDU1MjUzOTEyMTI3MjMiLCAiUFVHIjogIjQ1NTI1MzkxOTAwODUxIiwgIkZCRCI6ICI0NTUyNTM5MjQ1NzkwNyIsICJCU1QiOiAiNDU1MjUzOTUwMTM4MTEiLCAiU0hCIjogIiIsICJHRFIiOiAiIn19";
+
+/* 実行時に解読して変数に格納 */
+var _dec = JSON.parse(decodeURIComponent(escape(window.atob(ENCODED_DATA))));
+var NEW_PRODUCT_URL     = _dec.u;
+var NEW_HANDLE_MAP      = _dec.h;
+var SKU_COLOR           = _dec.s;
+var CSV_DEFAULT_VARIANT = _dec.v;
+
+/* 本番環境（Shopify上）では相対パス、ローカル/テザリングテスト時（IPアドレス等）は絶対パスを使用 */
+var STORE_DOMAIN = (window.location.protocol === 'file:' || /localhost|127\.0\.0\.1|192\.168\.|10\.|172\.|lhr\.life/.test(window.location.hostname)) 
+  ? 'https://8-co.jp' 
+  : '';
+
+/**
+ * Shopify product.js からバリアント情報を取得してキャッシュに格納
+ * @param {string} prefix - 商品コード（SMB, DAX, ...）
+ * @returns {Promise<boolean>} 取得成功: true
+ */
+function fetchVariants(prefix) {
+  var handle = NEW_HANDLE_MAP[prefix];
+  if (!handle) return Promise.resolve(false);
+  if (_fetchingHandles[prefix]) return _fetchingHandles[prefix];
+
+  /* 既にキャッシュ済みなら不要 */
+  var cached = Object.keys(_variantCache).filter(function(k){ return k.indexOf(prefix + '-') === 0; });
+  if (cached.length > 0) return Promise.resolve(true);
+
+  var url = STORE_DOMAIN + '/products/' + handle + '.js';
+  console.log('[8co] バリアントID取得中:', url);
+
+  var fetchPromise = fetch(url).then(function(res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  });
+
+  /* テザリング等の遅い回線向けに4秒のタイムアウトを設定 */
+  var timeoutPromise = new Promise(function(resolve, reject) {
+    setTimeout(function() { reject(new Error('タイムアウト (4000ms)')); }, 4000);
+  });
+
+  _fetchingHandles[prefix] = Promise.race([fetchPromise, timeoutPromise])
+    .then(function(data) {
+      if (!data.variants) return false;
+      data.variants.forEach(function(v) {
+        if (v.sku) {
+          _variantCache[v.sku] = String(v.id);
+          console.log('[8co] キャッシュ:', v.sku, '→', v.id);
+        }
+      });
+      delete _fetchingHandles[prefix];
+      return true;
+    })
+    .catch(function(err) {
+      console.warn('[8co] バリアント取得失敗 (' + prefix + '):', err.message);
+      delete _fetchingHandles[prefix];
+      return false;
+    });
+
+  return _fetchingHandles[prefix];
+}
+
+/* ページ読み込み時に全商品をプリフェッチ（クリック前にキャッシュを温める） */
+function prefetchAllVariants() {
+  ['SMB','DAX','PUG','FBD','BST','SHB','GDR'].forEach(function(prefix) {
+    fetchVariants(prefix);
+  });
+}
+
+/* カラー表示名 → URLパラメータ用文字列 */
+var COLOR_LABEL = {
+  'LGR':  'ライトグレー',
+  'SUMI': 'スミクロ'
+};
+
+/*
+  サイズコード後半 → ShopifyのOption1値（CSVのOption1 Valueカラムから）
+  L+=l-1, XL+=xl-1 はCSV実測値
+*/
+var SIZE_OPT = {
+  'SS':'ss', 'S':'s', 'M':'m', 'L':'l', 'L+':'l-1',
+  'XL':'xl', 'XL+':'xl-1', 'XXL':'xxl'
+};
+
+var SMB=[
+  {n:'SMB-SS',lo:1.5,hi:2.5,nk:22.2,gi:31.6,fl:5.4,fc:11.6,hl:5.5,hc:11.6,le:17.6},
+  {n:'SMB-S', lo:2.5,hi:4.0,nk:24.6,gi:35.2,fl:5.9,fc:12.0,hl:6.1,hc:12.2,le:19.6},
+  {n:'SMB-M', lo:4.0,hi:5.5,nk:26.0,gi:40.8,fl:8.4,fc:12.0,hl:8.5,hc:12.4,le:21.6},
+  {n:'SMB-L', lo:5.5,hi:7.5,nk:27.5,gi:42.4,fl:10.0,fc:12.0,hl:9.4,hc:12.4,le:22.9},
+  {n:'SMB-L+',lo:5.5,hi:7.5,nk:27.5,gi:42.4,fl:10.0,fc:12.0,hl:9.4,hc:12.4,le:24.1},
+  {n:'SMB-XL',lo:7.5,hi:10, nk:31.2,gi:48.2,fl:11.1,fc:13.7,hl:12.0,hc:14.0,le:27.3},
+  {n:'SMB-XL+',lo:7.5,hi:10,nk:31.2,gi:49.4,fl:11.5,fc:13.7,hl:12.0,hc:14.0,le:29.6},
+  {n:'SMB-XXL',lo:10,hi:13, nk:36.4,gi:53.0,fl:13.6,fc:13.9,hl:13.2,hc:14.4,le:30.0}
+];
+var DAX=[
+  {n:'DAX-SS',lo:2.0,hi:3.5,nk:24.6,gi:35.8,fl:2.5,fc:12.0,hl:3.2,hc:12.4,le:20.6},
+  {n:'DAX-S', lo:3.0,hi:4.5,nk:29.0,gi:42.8,fl:2.5,fc:13.0,hl:4.0,hc:13.4,le:24.4},
+  {n:'DAX-M', lo:4.5,hi:6.5,nk:30.6,gi:45.0,fl:2.6,fc:13.0,hl:5.0,hc:13.4,le:26.3},
+  {n:'DAX-L', lo:6.5,hi:9.0,nk:32.0,gi:46.0,fl:4.0,fc:13.0,hl:5.7,hc:13.4,le:28.4},
+  {n:'DAX-XL',lo:9.0,hi:11, nk:34.3,gi:48.8,fl:4.0,fc:13.5,hl:6.1,hc:13.9,le:29.1},
+  {n:'DAX-XXL',lo:11,hi:14, nk:38.0,gi:55.4,fl:4.6,fc:14.8,hl:6.2,hc:17.0,le:30.0}
+];
+var SHB=[
+  {n:'SHB-SS',lo:5.0,hi:7.0,nk:27.4,gi:45.0,fl:9.2,fc:12.0,hl:10.0,hc:13.4,le:24.6},
+  {n:'SHB-S', lo:7.0,hi:11, nk:29.0,gi:47.0,fl:10.0,fc:12.8,hl:11.0,hc:14.4,le:27.6},
+  {n:'SHB-M', lo:11, hi:15, nk:33.4,gi:53.4,fl:12.7,fc:13.2,hl:12.0,hc:15.6,le:29.6},
+  {n:'SHB-L', lo:15, hi:20, nk:38.9,gi:58.8,fl:14.8,fc:14.0,hl:13.5,hc:16.8,le:31.0}
+];
+var GDR=[
+  {n:'GDR-M', lo:20,hi:27,nk:44.3,gi:76.0,fl:22.6,fc:17.9,hl:16.1,hc:19.6,le:40.2},
+  {n:'GDR-L', lo:27,hi:33,nk:49.6,gi:85.4,fl:25.0,fc:21.0,hl:17.6,hc:26.0,le:46.3},
+  {n:'GDR-XL',lo:33,hi:40,nk:55.6,gi:91.2,fl:31.0,fc:27.8,hl:19.7,hc:28.0,le:52.3}
+];
+var PUG=[
+  {n:'PUG-S',lo:6.0,hi:8.0,nk:33.9,gi:49.0,fl:10.0,fc:12.4,hl:8.0,hc:13.0,le:23.0},
+  {n:'PUG-M',lo:8.0,hi:10, nk:36.3,gi:53.2,fl:10.0,fc:12.4,hl:9.9,hc:13.4,le:24.1},
+  {n:'PUG-L',lo:10, hi:12, nk:36.3,gi:53.2,fl:10.0,fc:12.4,hl:9.9,hc:13.4,le:26.0}
+];
+var FBD=[
+  {n:'FBD-S',lo:8.0,hi:11,nk:35.0,gi:50.6,fl:13.0,fc:8.4,hl:13.4,hc:8.1,le:19.0},
+  {n:'FBD-M',lo:11, hi:14,nk:40.0,gi:58.4,fl:13.0,fc:8.5,hl:13.4,hc:8.3,le:22.0},
+  {n:'FBD-L',lo:14, hi:17,nk:42.7,gi:64.0,fl:16.0,fc:13.2,hl:17.4,hc:10.8,le:23.5}
+];
+var BST=[
+  {n:'BST-M', lo:6.5,hi:8.5, nk:29.8,gi:47.2,fl:10.7,fc:12.6,hl:9.4,hc:12.7,le:21.5},
+  {n:'BST-L', lo:8.5,hi:11,  nk:30.8,gi:49.4,fl:12.2,fc:13.0,hl:12.3,hc:13.4,le:22.5},
+  {n:'BST-XL',lo:11, hi:13.5,nk:32.2,gi:52.4,fl:12.8,fc:13.6,hl:12.3,hc:13.4,le:23.5}
+];
+var ALL = SMB.concat(DAX, SHB, GDR, PUG, FBD, BST);
+var _course='', _w=0, _bt='', _szObj=null, _szIdx=0, _color='';
+
+function gel(id){ return document.getElementById(id); }
+function show(id){ var e=gel(id); if(e) e.style.display='block'; }
+function hide(id){ var e=gel(id); if(e) e.style.display='none'; }
+
+/* 全角→半角数字変換（日本語regexを使わない安全版） */
+function toH(s) {
+  if (!s) return '';
+  var o = '';
+  for (var i = 0; i < s.length; i++) {
+    var c = s.charCodeAt(i);
+    if (c >= 65296 && c <= 65305) { o += String.fromCharCode(c - 65248); }
+    else if ((c >= 48 && c <= 57) || c === 46) { o += s.charAt(i); }
+  }
+  return o;
+}
+function numV(id){ var e=gel(id); if(!e) return 0; e.value=toH(e.value); return parseFloat(e.value)||0; }
+function prog(n){
+  for (var i=1; i<=3; i++) {
+    var d=gel('pd'+i), l=gel('pl'+i);
+    if (!d) continue;
+    d.className = 'pdot' + (i<n?' done':i===n?' on':'');
+    if (l) l.className = 'pline' + (i<n?' done':'');
+  }
+}
+function ss(id){ setTimeout(function(){ var e=gel(id); if(e) e.scrollIntoView({behavior:'smooth',block:'start'}); }, 80); }
+function showBB(){ var b=gel('back-btn'); if(b) b.style.display='block'; }
+function hideBB(){ var b=gel('back-btn'); if(b) b.style.display='none'; }
+
+function selectCourse(c) {
+  _course = c;
+  hide('s0');
+  showBB();
+  prog(2);
+  if (c === 'a') { show('s1a'); ss('s1a'); }
+  else           { show('s1b'); ss('s1b'); }
+}
+function backToS0() {
+  ['s1a','s2a','s1b','result','tbl-sec'].forEach(hide);
+  show('s0'); hideBB(); prog(1); ss('s0');
+}
+function backToS1A() { hide('s2a'); show('s1a'); ss('s1a'); }
+
+function nextToBodyType() {
+  var w = numV('wi'), err = gel('w-err');
+  if (!w || w < 0.1 || w > 40) { if(err) err.style.display='block'; return; }
+  if (err) err.style.display='none';
+  _w = w;
+  hide('s1a'); show('s2a'); ss('s2a');
+}
+function selectBodyType(bt) { _bt = bt; doResult(); }
+
+function getCat(w, bt) {
+  if (bt === 'long') return {pool:DAX, cat:'DAX'};
+  if (bt === 'special') {
+    if (w <= 10) return {pool:PUG, cat:'PUG'};
+    if (w <= 14) return {pool:FBD, cat:'FBD'};
+    return {pool:SHB, cat:'SHB'};
+  }
+  if (w <= 13) return {pool:SMB, cat:'SMB'};
+  if (w <= 20) return {pool:SHB, cat:'SHB'};
+  return {pool:GDR, cat:'GDR'};
+}
+function bestIdx(pool, w) {
+  for (var i=0; i<pool.length; i++) { if (w>=pool[i].lo && w<pool[i].hi) return i; }
+  return w < pool[0].lo ? 0 : pool.length-1;
+}
+function doResult() {
+  var cp=getCat(_w,_bt), pool=cp.pool, cat=cp.cat;
+  var idx=bestIdx(pool,_w);
+  var just=pool[idx];
+  var li=(idx<pool.length-1)?idx+1:idx;
+  var loose=pool[li];
+  renderCards(just, loose, '体重 <strong>'+_w+'kg</strong> に基づき判定しました', pool, cat);
+}
+function findPool(s) {
+  var ps=[{p:SMB,c:'SMB'},{p:DAX,c:'DAX'},{p:SHB,c:'SHB'},{p:GDR,c:'GDR'},{p:PUG,c:'PUG'},{p:FBD,c:'FBD'},{p:BST,c:'BST'}];
+  for (var j=0; j<ps.length; j++) {
+    for (var k=0; k<ps[j].p.length; k++) { if (ps[j].p[k].n===s.n) return ps[j]; }
+  }
+  return {p:SMB, c:'SMB'};
+}
+function runSimB() {
+  var nk=numV('b-neck'), gi=numV('b-girth'), le=numV('b-len'), err=gel('b-err');
+  if (!nk || !gi || !le) { if(err) err.style.display='block'; return; }
+  if (err) err.style.display='none';
+  var best=null, bsc=Infinity;
+  for (var i=0; i<ALL.length; i++) {
+    var s=ALL[i], sc=(Math.pow(s.nk-nk,2)+Math.pow(s.gi-gi,2)*1.5+Math.pow(s.le-le,2))/3;
+    if (sc<bsc) { bsc=sc; best=s; }
+  }
+  if (!best) return;
+  var pr=findPool(best), idx2=pr.p.indexOf(best);
+  var li2=(idx2<pr.p.length-1)?idx2+1:idx2;
+  hide('s1b');
+  var summaryText = '入力された実測値<br>（首回り: ' + nk + 'cm / 胴回り: ' + gi + 'cm / 着丈: ' + le + 'cm）<br>に基づき精密判定しました';
+  renderCards(best, pr.p[li2], summaryText, pr.p, pr.c);
+}
+function renderCards(just, loose, summary, pool, cat) {
+  var grid=gel('cand-grid'); if (!grid) return;
+  grid.innerHTML='';
+  var rs=gel('r-summary'); if (rs) rs.innerHTML=summary;
+  var same = (just.n === loose.n);
+  if (same) {
+    /* 同サイズ時: RECOMMENDカード1枚を中央表示 */
+    grid.style.gridTemplateColumns = '1fr';
+    grid.style.maxWidth = '280px';
+    grid.style.margin = '0 auto 24px';
+    var d=document.createElement('div');
+    d.className='cand rec';
+    d.innerHTML='<div class="rec-badge">&#x2605; 推奨サイズ</div>'
+      +'<div class="cand-fit">JUST FIT</div>'
+      +'<div class="cand-name">'+just.n+'</div>'
+      +'<div class="cand-lbl">皮膚にしっかりフィット</div>'
+      +'<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
+    grid.appendChild(d);
+    d.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(just,0); });
+  } else {
+    grid.style.gridTemplateColumns = '';
+    grid.style.maxWidth = '';
+    grid.style.margin = '';
+    var items=[[just,'JUST FIT','皮膚にしっかりフィット',true],[loose,'LOOSE FIT','少し余裕のある着心地',false]];
+    for (var i=0; i<items.length; i++) {
+      var s=items[i][0], lbl=items[i][1], desc=items[i][2], rec=items[i][3];
+      var d2=document.createElement('div');
+      d2.className='cand'+(rec?' rec':'');
+      d2.innerHTML=(rec?'<div class="rec-badge">&#x2605; 推奨サイズ</div>':'<div class="no-badge"></div>')
+        +'<div class="cand-fit">'+lbl+'</div>'
+        +'<div class="cand-name">'+s.n+'</div>'
+        +'<div class="cand-lbl">'+desc+'</div>'
+        +'<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
+      grid.appendChild(d2);
+      (function(obj,idx){ d2.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(obj,idx); }); })(s,i);
+    }
+  }
+  renderSizeTbl(pool,cat,same?[just.n]:[just.n,loose.n]);
+  show('result'); prog(3); ss('result');
+}
+function renderSizeTbl(pool, cat, hl) {
+  var sec=gel('tbl-sec'), inner=gel('tbl-inner'); if (!sec||!inner) return;
+  var hlm={}; for(var i=0;i<hl.length;i++) hlm[hl[i]]=true;
+  var rows=''; for(var j=0;j<pool.length;j++){var s=pool[j];rows+='<tr'+(hlm[s.n]?' class="hl"':'')+'><td>'+s.n+'</td><td>'+s.nk.toFixed(1)+'</td><td>'+s.gi.toFixed(1)+'</td><td>'+s.fl.toFixed(1)+'</td><td>'+s.hl.toFixed(1)+'</td><td>'+s.le.toFixed(1)+'</td></tr>';}
+  inner.innerHTML='<table class="sz-tbl"><thead><tr><th>サイズ</th><th>首回り</th><th>胴回り</th><th>前脚丈</th><th>後脚丈</th><th>着丈</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  sec.style.display='block';
+}
+function openSzModal(s, idx) {
+  _szObj=s; _szIdx=idx; _color='';
+  ['mc-lgr','mc-sumi'].forEach(function(id){ var e=gel(id); if(e) e.className='modal-chip'; });
+  var gb=gel('modal-go-btn'); if(gb) gb.disabled=true;
+  var nm=gel('sz-name'); if(nm) nm.textContent=s.n;
+
+  var tblHtml = '<table class="modal-mini-tbl">'
+    + '<tr><th>①首回り</th><th>②胴回り</th><th>③前脚丈</th><th>④前脚太さ</th><th>⑤後脚丈</th><th>⑥後脚太さ</th><th>⑦着丈</th></tr>'
+    + '<tr><td>'+s.nk.toFixed(1)+'</td><td>'+s.gi.toFixed(1)+'</td><td>'+s.fl.toFixed(1)+'</td><td>'+s.fc.toFixed(1)+'</td><td>'+s.hl.toFixed(1)+'</td><td>'+s.hc.toFixed(1)+'</td><td>'+s.le.toFixed(1)+'</td></tr>'
+    + '</table>';
+  var tc=gel('modal-mini-tbl-container'); if(tc) tc.innerHTML = tblHtml;
+
+  var ov=gel('sz-ov'); if(ov){ ov.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function closeSzModal() {
+  var ov=gel('sz-ov'); if(ov){ ov.classList.remove('open'); document.body.style.overflow=''; }
+  /* ボタン状態をリセット（goToProduct中に無効化された場合） */
+  var goBtn = gel('modal-go-btn');
+  if (goBtn && _color) { goBtn.disabled = false; goBtn.textContent = 'このカラーで商品ページへ →'; }
+  else if (goBtn)      { goBtn.disabled = true;  goBtn.textContent = 'このカラーで商品ページへ →'; }
+}
+function modalSelectColor(col) {
+  _color=col;
+  ['mc-lgr','mc-sumi'].forEach(function(id){ var e=gel(id); if(e) e.className='modal-chip'; });
+  var btn=gel('mc-'+col.toLowerCase()); if(btn) btn.className='modal-chip sel';
+  var gb=gel('modal-go-btn'); if(gb) gb.disabled=false;
+}
+
+/* 本番の13桁バリアントIDマッピング表（全コレクション自動取得・反映済） */
+var VARIANT_MAP = {
+  'wear-chihuahua': {
+    'SS':  { 'LGR': '45317718638771', 'SUMI': '45317718671539' },
+    'S':   { 'LGR': '45317718704307', 'SUMI': '45317718737075' },
+    'M':   { 'LGR': '45317718769843', 'SUMI': '45317718802611' },
+    'L':   { 'LGR': '45317718835379', 'SUMI': '45317718868147' },
+    'L+':  { 'LGR': '45317718900915', 'SUMI': '45317718933683' },
+    'XL':  { 'LGR': '45317718966451', 'SUMI': '45317718999219' },
+    'XL+': { 'LGR': '45317719031987', 'SUMI': '45317719064755' },
+    'XXL': { 'LGR': '45317719097523', 'SUMI': '45317719130291' }
+  },
+  'wear-miniaturedachshund': {
+    'SS':  { 'LGR': '45361724719283', 'SUMI': '45361724752051' },
+    'S':   { 'LGR': '45361724784819', 'SUMI': '45361724817587' },
+    'M':   { 'LGR': '45361724850355', 'SUMI': '45361724883123' },
+    'L':   { 'LGR': '45361724915891', 'SUMI': '45361724948659' },
+    'XL':  { 'LGR': '45361725046963', 'SUMI': '45361725079731' },
+    'XXL': { 'LGR': '45361725178035', 'SUMI': '45361725210803' }
+  },
+  'wear-shibainu': {
+    'SS':  { 'LGR': '45317910364339', 'SUMI': '45317910397107' },
+    'S':   { 'LGR': '45317910429875', 'SUMI': '45317910462643' },
+    'M':   { 'LGR': '45317910495411', 'SUMI': '45317910528179' },
+    'L':   { 'LGR': '45317910560947', 'SUMI': '45317910593715' }
+  },
+  'wear-goldenretriever': {
+    'M':   { 'LGR': '45317935562931', 'SUMI': '45317935595699' },
+    'L':   { 'LGR': '45317935628467', 'SUMI': '45317935661235' },
+    'XL':  { 'LGR': '45317935694003', 'SUMI': '45317935726771' }
+  },
+  'wear-pug': {
+    'S':   { 'LGR': '45317911576755', 'SUMI': '45317911609523' },
+    'M':   { 'LGR': '45317911642291', 'SUMI': '45317911675059' },
+    'L':   { 'LGR': '45317911707827', 'SUMI': '45317911740595' }
+  },
+  'wear-frenchbulldog': {
+    'S':   { 'LGR': '45317910888627', 'SUMI': '45317910921395' },
+    'M':   { 'LGR': '45317910954163', 'SUMI': '45317910986931' },
+    'L':   { 'LGR': '45317911019699', 'SUMI': '45317911052467' }
+  },
+  'wear-bostonterrier': {
+    'M':   { 'LGR': '45317911380147', 'SUMI': '45317911412915' },
+    'L':   { 'LGR': '45317911445683', 'SUMI': '45317911478451' },
+    'XL':  { 'LGR': '45317911511219', 'SUMI': '45317911543987' }
+  }
+};
+
+/* トースト通知を表示（エラー・情報表示用） */
+function showToast(msg, durationMs) {
+  var t = gel('toast-notify');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  if (showToast._timer) clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(function() { t.classList.remove('show'); }, durationMs || 3000);
+}
+
+/**
+ * 商品ページ遷移（Step 1: ?variant=ID 形式 / Shopify標準）
+ *
+ * 解決策:
+ *   SKU形式（例: SMB-SS-LGR）でキャッシュを検索し、
+ *   Shopify標準の ?variant=ID を生成する。
+ *   キャッシュミス時は product.js をフェッチして解決する。
+ *   フェッチ失敗時はCSVデフォルトIDにフォールバック。
+ */
+function goToProduct() {
+  if (!_szObj || !_color) return;
+
+  var prefix   = _szObj.n.split('-')[0];
+  var suffix   = _szObj.n.split('-').slice(1).join('-');
+  var baseUrl  = STORE_DOMAIN + NEW_PRODUCT_URL[prefix];
+
+  if (!baseUrl) {
+    showToast('該当する商品ページが見つかりません', 3500);
+    return;
+  }
+
+  /* SKU = 「商品コード-サイズ-カラー」（CSVのVariant SKU列と一致） */
+  /* サイズの変換: L+ → L-1 , XL+ → XL-1 はCSV側の表記に合わせる */
+  var sizeForSku  = suffix.replace('+', '-1');  /* L+ → L-1, XL+ → XL-1 */
+  var colorForSku = SKU_COLOR[_color] || _color;
+  var sku         = prefix + '-' + sizeForSku.toUpperCase() + '-' + colorForSku;
+  var colorName   = COLOR_LABEL[_color] || _color;
+
+  console.log('[8co] 遷移開始 SKU:', sku, '| ベースURL:', baseUrl);
+
+  /* ボタンを一時無効化してUXを保護 */
+  var goBtn = gel('modal-go-btn');
+  if (goBtn) { goBtn.disabled = true; goBtn.textContent = '読み込み中…'; }
+
+  function _navigate(variantId) {
+    var url = baseUrl;
+    if (variantId) {
+      url += '?variant=' + variantId;
+      console.log('[8co] variant ID解決:', variantId, '| URL:', url);
+    } else {
+      console.warn('[8co] variant ID未解決。ベースURLで遷移します。');
+    }
+
+    /* localStorage にカラー・サイズを保存（遷移先でのフォールバック用） */
+    try {
+      localStorage.setItem('8co_selected_color', colorName);
+      localStorage.setItem('8co_selected_size',  suffix);
+      localStorage.setItem('8co_selected_sku',   sku);
+      localStorage.setItem('8co_nav_timestamp',  Date.now().toString());
+    } catch(e) {}
+
+    closeSzModal();
+    window.location.href = url;
+  }
+
+  /* ① キャッシュヒット → 即時遷移 */
+  if (_variantCache[sku]) {
+    _navigate(_variantCache[sku]);
+    return;
+  }
+
+  /* ② キャッシュミス → product.js フェッチして解決 */
+  fetchVariants(prefix).then(function() {
+    var variantId = _variantCache[sku] || CSV_DEFAULT_VARIANT[prefix] || '';
+    if (!_variantCache[sku] && variantId) {
+      console.warn('[8co] SKU "' + sku + '" がキャッシュにありません。CSVデフォルトIDを使用:', variantId);
+    }
+    _navigate(variantId);
+  }).catch(function() {
+    /* フェッチ自体が例外 → デフォルトIDで遷移 */
+    _navigate(CSV_DEFAULT_VARIANT[prefix] || '');
+  });
+}
+
+function resetAll() {
+  _course=''; _w=0; _bt=''; _szObj=null; _szIdx=0; _color='';
+  ['s1a','s2a','s1b','result','tbl-sec'].forEach(hide);
+  show('s0'); hideBB(); prog(1);
+  ['wi','bw','b-neck','b-girth','b-len'].forEach(function(id){ var e=gel(id); if(e) e.value=''; });
+  ['w-err','b-err'].forEach(function(id){ var e=gel(id); if(e) e.style.display='none'; });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  /* Course selection */
+  var ca=gel('btn-course-a'); if(ca) ca.addEventListener('click',function(){ selectCourse('a'); });
+  var cb=gel('btn-course-b'); if(cb) cb.addEventListener('click',function(){ selectCourse('b'); });
+  /* Body type */
+  var bstd=gel('btn-bt-std'); if(bstd) bstd.addEventListener('click',function(){ selectBodyType('standard'); });
+  var blng=gel('btn-bt-lng'); if(blng) blng.addEventListener('click',function(){ selectBodyType('long'); });
+  var bspc=gel('btn-bt-spc'); if(bspc) bspc.addEventListener('click',function(){ selectBodyType('special'); });
+  /* Nav buttons */
+  var bnb=gel('btn-next-bt');  if(bnb)  bnb.addEventListener('click', nextToBodyType);
+  var bb0=gel('back-btn');     if(bb0)  bb0.addEventListener('click', backToS0);
+  var bs1=gel('btn-back-s1a'); if(bs1)  bs1.addEventListener('click', backToS0);
+  var bs2=gel('btn-back-s2a'); if(bs2)  bs2.addEventListener('click', backToS1A);
+  var bs3=gel('btn-back-s1b'); if(bs3)  bs3.addEventListener('click', backToS0);
+  var brn=gel('btn-run-b');    if(brn)  brn.addEventListener('click', runSimB);
+  var brs=gel('btn-reset');    if(brs)  brs.addEventListener('click', resetAll);
+  /* Modal */
+  var mx=gel('modal-close');   if(mx)   mx.addEventListener('click',  closeSzModal);
+  var ov=gel('sz-ov');         if(ov)   ov.addEventListener('click',  function(e){ if(e.target===ov) closeSzModal(); });
+  var mlg=gel('mc-lgr');       if(mlg)  mlg.addEventListener('click', function(){ modalSelectColor('LGR'); });
+  var msk=gel('mc-sumi');      if(msk)  msk.addEventListener('click', function(){ modalSelectColor('SUMI'); });
+  var mgo=gel('modal-go-btn'); if(mgo)  mgo.addEventListener('click', goToProduct);
+  /* Half-width input normalization */
+  ['wi','bw','b-neck','b-girth','b-len'].forEach(function(id){
+    var e=gel(id); if(!e) return;
+    var cv=function(){ var v=toH(e.value); if(v!==e.value) e.value=v; };
+    e.addEventListener('input',cv); e.addEventListener('blur',cv);
+  });
+  /* Escape key */
+  document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') closeSzModal(); });
+  /* バリアントIDをバックグラウンドでプリフェッチ（ユーザーがモーダルを開く前にキャッシュを温める） */
+  setTimeout(prefetchAllVariants, 800);
+});
+</script>
+</body>
+</html>

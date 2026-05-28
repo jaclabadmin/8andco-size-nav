@@ -1,0 +1,354 @@
+/* ============================================================
+ * 8co-command-palette.css
+ * コマンドパレット UI スタイル（機能1）
+ * ============================================================ */
+
+/* オーバーレイ（デフォルト非表示） */
+#cmd-palette-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 16, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 20000;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  animation: cmd-overlay-in 0.15s ease;
+}
+#cmd-palette-overlay.cmd-open {
+  display: flex;
+}
+@keyframes cmd-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* パレット本体 */
+#cmd-palette-box {
+  width: 100%;
+  max-width: 620px;
+  background: #F1EDE8;
+  border: 1px solid rgba(79, 79, 79, 0.2);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.36);
+  animation: cmd-box-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+@keyframes cmd-box-in {
+  from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ヘッダー（入力欄） */
+#cmd-palette-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(79, 79, 79, 0.14);
+}
+#cmd-palette-icon {
+  font-size: 18px;
+  color: #7e7672;
+  flex-shrink: 0;
+}
+#cmd-palette-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Urbanist', 'Noto Sans JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #222;
+  letter-spacing: 0.04em;
+}
+#cmd-palette-input::placeholder {
+  color: rgba(79, 79, 79, 0.45);
+  font-weight: 300;
+}
+#cmd-palette-close {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #7e7672;
+  cursor: pointer;
+  padding: 4px 6px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+#cmd-palette-close:hover { color: #222; }
+
+/* 検索結果リスト */
+#cmd-palette-results {
+  list-style: none;
+  max-height: 360px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.cmd-result-item {
+  display: grid;
+  grid-template-columns: 80px 100px 1fr 50px;
+  gap: 0 12px;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(79, 79, 79, 0.07);
+  transition: background 0.1s;
+  font-family: 'Urbanist', 'Noto Sans JP', sans-serif;
+}
+.cmd-result-item:hover,
+.cmd-result-item.cmd-selected {
+  background: rgba(210, 180, 140, 0.18);
+}
+.cmd-result-item.cmd-selected {
+  background: rgba(210, 180, 140, 0.28);
+}
+
+.cmd-code {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: #222;
+}
+.cmd-color {
+  font-size: 12px;
+  color: #7e7672;
+  letter-spacing: 0.06em;
+}
+.cmd-label {
+  font-size: 12px;
+  color: #444;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cmd-category {
+  font-size: 10px;
+  color: #8E9DB2;
+  letter-spacing: 0.1em;
+  text-align: right;
+  white-space: nowrap;
+}
+.cmd-no-result {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #7e7672;
+  letter-spacing: 0.06em;
+}
+
+/* フッター（キーボードヒント） */
+#cmd-palette-footer {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px;
+  background: rgba(79, 79, 79, 0.04);
+  border-top: 1px solid rgba(79, 79, 79, 0.1);
+  font-size: 10px;
+  color: #7e7672;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================================
+ * 8co-history-sidebar.css
+ * 閲覧履歴サイドバー スタイル（機能2）
+ * ============================================================ */
+
+/* サイドバーコンテナ */
+#history-sidebar {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 開閉トグルボタン */
+#history-toggle {
+  background: #7e7672;
+  border: none;
+  color: #fff;
+  width: 36px;
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  border-radius: 4px 0 0 4px;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.12);
+  writing-mode: vertical-lr;
+  letter-spacing: 0.06em;
+}
+#history-toggle:hover { background: #5c5451; }
+
+/* サイドパネル */
+#history-panel {
+  width: 0;
+  overflow: hidden;
+  background: #F1EDE8;
+  border-left: 1px solid rgba(79,79,79,0.16);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.12);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#history-panel.history-panel-open {
+  width: 280px;
+}
+
+/* パネルヘッダー */
+#history-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(79,79,79,0.14);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7e7672;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#history-clear {
+  background: none;
+  border: none;
+  font-size: 10px;
+  color: #B28E8E;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  transition: color 0.15s;
+}
+#history-clear:hover { color: #8a5555; }
+
+/* 履歴リスト */
+#history-list {
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+}
+.history-item { border-bottom: 1px solid rgba(79,79,79,0.08); }
+.history-item-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-areas:
+    "code  color"
+    "label label"
+    "time  time";
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.history-item-btn:hover { background: rgba(210,180,140,0.16); }
+
+.history-code {
+  grid-area: code;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: #222;
+}
+.history-color {
+  grid-area: color;
+  font-size: 11px;
+  color: #7e7672;
+  letter-spacing: 0.06em;
+  text-align: right;
+}
+.history-label {
+  grid-area: label;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.history-time {
+  grid-area: time;
+  font-size: 9px;
+  color: #aaa;
+  letter-spacing: 0.06em;
+}
+.history-empty {
+  padding: 20px 14px;
+  font-size: 11px;
+  color: #aaa;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+ * 在庫バッジ（機能3）
+ * ============================================================ */
+.inv-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 2px;
+  font-family: 'Urbanist', 'Noto Sans JP', sans-serif;
+}
+.inv-instock    { background: rgba(90,138,90,0.12); color: #3d6b3d; border: 1px solid rgba(90,138,90,0.3); }
+.inv-outofstock { background: rgba(178,142,142,0.12); color: #8a5555; border: 1px solid rgba(178,142,142,0.3); }
+.inv-mock-note  { font-size: 9px; color: #aaa; margin-left: 8px; letter-spacing: 0.06em; }
+
+/* ============================================================
+ * レスポンシブ（モバイル）
+ * ============================================================ */
+@media (max-width: 599px) {
+  /* サイドバー → 下部スライドアップパネルに変更 */
+  #history-sidebar {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    transform: none;
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  #history-toggle {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    writing-mode: horizontal-tb;
+    padding: 10px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+  #history-panel {
+    width: 100% !important;
+    max-height: 0;
+    border-left: none;
+    border-top: 1px solid rgba(79,79,79,0.16);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+    transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #history-panel.history-panel-open {
+    max-height: 60vh;
+  }
+  /* コマンドパレットのグリッドを2カラムに */
+  .cmd-result-item {
+    grid-template-columns: 70px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .cmd-label    { grid-column: 1 / -1; }
+  .cmd-category { display: none; }
+}
