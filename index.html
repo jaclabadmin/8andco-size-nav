@@ -61,10 +61,17 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
 .cand-lbl{font-size:10px;color:var(--sub);margin-bottom:18px;height:16px;line-height:16px}
 .cand-btn{display:block;width:100%;height:46px;line-height:46px;padding:0 8px;background:var(--brand-grey);color:#fff;border:none;font-family:var(--font);font-size:11px;letter-spacing:.12em;cursor:pointer;transition:opacity .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:auto}
 .cand-btn:hover{opacity:.8}
+.over-banner{display:none;background:linear-gradient(135deg,#f5f0eb 0%,#ebe4dc 100%);border:1.5px solid var(--acc);border-radius:12px;padding:22px 20px;margin-bottom:24px;text-align:center;box-shadow:0 2px 12px rgba(126,118,114,.1)}
+.over-banner-icon{font-size:24px;margin-bottom:8px;animation:pulse-icon 2s ease-in-out infinite}
+@keyframes pulse-icon{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.over-banner-title{font-size:14px;font-weight:500;color:var(--ink);letter-spacing:.06em;margin-bottom:10px}
+.over-banner-body{font-size:12px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+.over-banner-btn{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#222 0%,#444 100%);color:#fff;border:none;border-radius:6px;font-family:var(--font);font-size:13px;letter-spacing:.12em;cursor:pointer;transition:all .25s;font-weight:500;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.over-banner-btn:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .tbl-sec{margin-top:28px}
 .tbl-title{font-size:9px;color:var(--sub);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:14px}
 .sz-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.sz-tbl th{background:var(--brand-grey);color:#fff;padding:10px 8px;font-weight:300;letter-spacing:.08em}
+.sz-tbl th{background:var(--brand-grey);color:#fff;padding:10px 8px;font-weight:300;letter-spacing:.08em;text-align:center}
 .sz-tbl td{padding:10px 8px;border-bottom:.5px solid var(--line);text-align:center}
 .sz-tbl tr.hl td{background:rgba(210,180,140,.14);font-weight:500}
 .reset-wrap{text-align:center;margin-top:40px}
@@ -88,8 +95,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
 .modal-chip.sel::after{opacity:1;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%23222"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>');}
 .modal-chip.sel .msw{border-color:var(--line)}
 .msw{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,0.1)}
-.modal-go{display:block;width:100%;padding:22px;background:var(--brand-grey);color:#fff;border:none;font-family:var(--font);font-size:16px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;font-weight:500}
-.modal-go:hover{opacity:.85}.modal-go:disabled{opacity:.35;cursor:default}
+.modal-go{display:block;width:100%;padding:20px;background:linear-gradient(135deg,#222 0%,#444 100%);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-size:16px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .25s;font-weight:500;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.modal-go:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.modal-go:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none}
 @media(max-width:460px){.course-wrap{grid-template-columns:1fr}.cand-wrap{grid-template-columns:1fr}}
 
 .modal-adv{font-size:14px;color:var(--ink);line-height:1.8;margin-bottom:14px;padding:16px 16px;background:#fff;border-left:3px solid var(--acc);word-break:break-all;white-space:normal}
@@ -99,7 +107,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
 .modal-adv-icon{font-size:18px;flex-shrink:0;margin-top:1px}
 .modal-adv-title{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;margin-bottom:4px}
 .modal-adv-body{font-size:13px;color:var(--sub);line-height:1.75}
-.modal-line-area{border:1px solid var(--line);padding:16px 16px;margin-bottom:18px;background:#fff;word-break:break-all;white-space:normal}
+.modal-line-area{border:1px solid var(--line);border-radius:8px;padding:16px 16px;margin-bottom:18px;background:#fafafa;word-break:break-all;white-space:normal}
 .modal-line-area-inner{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
 .modal-line-btn{display:block;width:100%;padding:14px;text-align:center;background:transparent;border:1px solid var(--acc2);color:var(--ink);text-decoration:none;font-family:var(--font);font-size:15px;letter-spacing:.12em;transition:.2s;font-weight:500}
 .modal-line-btn:hover{background:rgba(142,157,178,.1)}
@@ -257,6 +265,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
   <div id="result" class="sec">
     <div class="sl">Step 3 &mdash; Size Recommendation</div>
     <div class="r-summary" id="r-summary"></div>
+    <div id="over-banner" class="over-banner">
+      <div class="over-banner-icon">⚠️</div>
+      <div class="over-banner-title">体重が目安の範囲を大きく超えています</div>
+      <div class="over-banner-body">体重だけでは正確なサイズが判定しにくい場合があります。<br>首回り・胴回り・着丈の実寸で判定する<br><strong>Course B「より詳しく調べる」</strong>をお試しください。</div>
+      <button class="over-banner-btn" id="over-banner-btn" type="button">▶ Course B で実測して調べる</button>
+    </div>
     <div class="cand-wrap" id="cand-grid"></div>
     <div class="tbl-sec sec" id="tbl-sec">
       <div class="r-warn">※AI判定はあくまで目安となります。個体差等により異なる場合があるため、必ず下部のサイズ表をしっかりご確認の上、ご購入をお願いいたします。</div>
@@ -296,6 +310,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
         </div>
       </div>
     </div>
+    <button class="modal-go" id="modal-go-btn" type="button" disabled>このカラーで商品ページへ →</button>
     <div class="modal-line-area">
       <div class="modal-line-area-inner">
         <div>
@@ -305,7 +320,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
       </div>
       <a href="https://lin.ee/ye7VJkR" target="_blank" rel="noopener" class="modal-line-btn">公式LINEで相談する →</a>
     </div>
-    <button class="modal-go" id="modal-go-btn" type="button" disabled>このカラーで商品ページへ →</button>
   </div>
 </div>
 <div class="toast" id="toast-notify"></div>
@@ -337,10 +351,15 @@ var NEW_HANDLE_MAP      = _dec.h;
 var SKU_COLOR           = _dec.s;
 var CSV_DEFAULT_VARIANT = _dec.v;
 
-/* 本番環境（Shopify上）では相対パス、ローカル/テザリングテスト時（IPアドレス等）は絶対パスを使用 */
-var STORE_DOMAIN = (window.location.protocol === 'file:' || /localhost|127\.0\.0\.1|192\.168\.|10\.|172\.|lhr\.life/.test(window.location.hostname)) 
+/* 本番環境（Shopify上）では相対パス、それ以外（GitHub Pagesやローカル）は絶対パスを使用 */
+var STORE_DOMAIN = (window.location.hostname.indexOf('8-co.jp') === -1 && window.location.hostname.indexOf('myshopify.com') === -1) 
   ? 'https://8-co.jp' 
   : '';
+
+/* バリアントIDキャッシュ { 'SMB-SS-LGR': '12345678', ... } */
+var _variantCache = {};
+/* フェッチ中のハンドルを管理（重複リクエスト防止） */
+var _fetchingHandles = {};
 
 /**
  * Shopify product.js からバリアント情報を取得してキャッシュに格納
@@ -531,6 +550,33 @@ function doResult() {
   var just=pool[idx];
   var li=(idx<pool.length-1)?idx+1:idx;
   var loose=pool[li];
+  /* 体重が最大値を5kg以上超えていたらバナーのみ表示、カードと表は非表示 */
+  var maxHi = pool[pool.length-1].hi;
+  var isOver = (_w - maxHi) > 5;
+  var banner = gel('over-banner');
+  var grid = gel('cand-grid');
+  var tblSec = gel('tbl-sec');
+  if (banner) {
+    if (isOver) {
+      banner.style.display = 'block';
+      if (grid) grid.style.display = 'none';
+      if (tblSec) tblSec.style.display = 'none';
+      var bBtn = gel('over-banner-btn');
+      if (bBtn) bBtn.onclick = function() {
+        ['result','tbl-sec'].forEach(hide);
+        if (banner) banner.style.display = 'none';
+        backToS0();
+        setTimeout(function(){ var cb=gel('btn-course-b'); if(cb) cb.click(); }, 120);
+      };
+      var rs=gel('r-summary');
+      if (rs) rs.innerHTML='体重 <strong>'+_w+'kg</strong> に基づき判定しました';
+      show('result'); prog(3); ss('result');
+      return;
+    } else {
+      banner.style.display = 'none';
+      if (grid) grid.style.display = '';
+    }
+  }
   renderCards(just, loose, '体重 <strong>'+_w+'kg</strong> に基づき判定しました', pool, cat);
 }
 function findPool(s) {
@@ -550,17 +596,29 @@ function runSimB() {
     if (sc<bsc) { bsc=sc; best=s; }
   }
   if (!best) return;
+  /* Course Bではバナーを非表示 */
+  var banner = gel('over-banner'); if (banner) banner.style.display='none';
   var pr=findPool(best), idx2=pr.p.indexOf(best);
   var li2=(idx2<pr.p.length-1)?idx2+1:idx2;
   hide('s1b');
   var summaryText = '入力された実測値<br>（首回り: ' + nk + 'cm / 胴回り: ' + gi + 'cm / 着丈: ' + le + 'cm）<br>に基づき精密判定しました';
   renderCards(best, pr.p[li2], summaryText, pr.p, pr.c);
 }
-function renderCards(just, loose, summary, pool, cat) {
+function renderCards(just, loose, summary, pool, cat, isOverWeight) {
   var grid=gel('cand-grid'); if (!grid) return;
   grid.innerHTML='';
   var rs=gel('r-summary'); if (rs) rs.innerHTML=summary;
   var same = (just.n === loose.n);
+
+  /* 体重オーバー時の警告文とボタン */
+  function overWarnHtml(sz) {
+    return '<div class="cand-over-warn">※ 体重が目安を大きく超えています<br>サイズ感はLINEでご相談ください</div>'
+      + '<a href="https://lin.ee/ye7VJkR" target="_blank" rel="noopener" class="cand-btn-line">サイズをLINEで相談する →</a>';
+  }
+  function normalBtnHtml() {
+    return '<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
+  }
+
   if (same) {
     /* 同サイズ時: RECOMMENDカード1枚を中央表示 */
     grid.style.gridTemplateColumns = '1fr';
@@ -572,9 +630,9 @@ function renderCards(just, loose, summary, pool, cat) {
       +'<div class="cand-fit">JUST FIT</div>'
       +'<div class="cand-name">'+just.n+'</div>'
       +'<div class="cand-lbl">皮膚にしっかりフィット</div>'
-      +'<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
+      +(isOverWeight ? overWarnHtml(just) : normalBtnHtml());
     grid.appendChild(d);
-    d.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(just,0); });
+    if (!isOverWeight) d.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(just,0); });
   } else {
     grid.style.gridTemplateColumns = '';
     grid.style.maxWidth = '';
@@ -588,9 +646,9 @@ function renderCards(just, loose, summary, pool, cat) {
         +'<div class="cand-fit">'+lbl+'</div>'
         +'<div class="cand-name">'+s.n+'</div>'
         +'<div class="cand-lbl">'+desc+'</div>'
-        +'<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
+        +(isOverWeight ? overWarnHtml(s) : normalBtnHtml());
       grid.appendChild(d2);
-      (function(obj,idx){ d2.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(obj,idx); }); })(s,i);
+      if (!isOverWeight) (function(obj,idx){ d2.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(obj,idx); }); })(s,i);
     }
   }
   renderSizeTbl(pool,cat,same?[just.n]:[just.n,loose.n]);
@@ -599,8 +657,13 @@ function renderCards(just, loose, summary, pool, cat) {
 function renderSizeTbl(pool, cat, hl) {
   var sec=gel('tbl-sec'), inner=gel('tbl-inner'); if (!sec||!inner) return;
   var hlm={}; for(var i=0;i<hl.length;i++) hlm[hl[i]]=true;
-  var rows=''; for(var j=0;j<pool.length;j++){var s=pool[j];rows+='<tr'+(hlm[s.n]?' class="hl"':'')+'><td>'+s.n+'</td><td>'+s.nk.toFixed(1)+'</td><td>'+s.gi.toFixed(1)+'</td><td>'+s.fl.toFixed(1)+'</td><td>'+s.hl.toFixed(1)+'</td><td>'+s.le.toFixed(1)+'</td></tr>';}
-  inner.innerHTML='<table class="sz-tbl"><thead><tr><th>サイズ</th><th>首回り</th><th>胴回り</th><th>前脚丈</th><th>後脚丈</th><th>着丈</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  var rows='';
+  for(var j=0;j<pool.length;j++){
+    var s=pool[j];
+    var wStr = (s.lo !== undefined && s.hi !== undefined) ? (s.lo.toFixed(1) + ' - ' + s.hi.toFixed(1) + 'kg') : '-';
+    rows+='<tr'+(hlm[s.n]?' class="hl"':'')+'><td>'+s.n+'</td><td>'+wStr+'</td><td>'+s.nk.toFixed(1)+'</td><td>'+s.gi.toFixed(1)+'</td><td>'+s.fl.toFixed(1)+'</td><td>'+s.hl.toFixed(1)+'</td><td>'+s.le.toFixed(1)+'</td></tr>';
+  }
+  inner.innerHTML='<table class="sz-tbl"><thead><tr><th>サイズ</th><th>体重目安</th><th>首回り</th><th>胴回り</th><th>前脚丈</th><th>後脚丈</th><th>着丈</th></tr></thead><tbody>'+rows+'</tbody></table>';
   sec.style.display='block';
 }
 function openSzModal(s, idx) {
