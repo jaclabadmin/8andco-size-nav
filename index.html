@@ -68,7 +68,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
 .over-banner-body{font-size:12px;color:var(--sub);line-height:1.8;margin-bottom:16px}
 .over-banner-btn{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#222 0%,#444 100%);color:#fff;border:none;border-radius:6px;font-family:var(--font);font-size:13px;letter-spacing:.12em;cursor:pointer;transition:all .25s;font-weight:500;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .over-banner-btn:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
-.tbl-sec{margin-top:28px}
+.tbl-sec{margin-top:28px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tbl-title{font-size:9px;color:var(--sub);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:14px}
 .sz-tbl{width:100%;border-collapse:collapse;font-size:11px}
 .sz-tbl th{background:var(--brand-grey);color:#fff;padding:10px 8px;font-weight:300;letter-spacing:.08em;text-align:center}
@@ -98,7 +98,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
 .modal-go{display:block;width:100%;padding:20px;background:linear-gradient(135deg,#222 0%,#444 100%);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-size:16px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .25s;font-weight:500;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .modal-go:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .modal-go:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none}
-@media(max-width:460px){.course-wrap{grid-template-columns:1fr}.cand-wrap{grid-template-columns:1fr}}
+@media(max-width:460px){.course-wrap{grid-template-columns:1fr}.cand-wrap{grid-template-columns:1fr;max-width:280px;margin:0 auto 24px}}
 
 .modal-adv{font-size:14px;color:var(--ink);line-height:1.8;margin-bottom:14px;padding:16px 16px;background:#fff;border-left:3px solid var(--acc);word-break:break-all;white-space:normal}
 .modal-adv-main{font-size:16px;font-weight:500;margin-bottom:6px}
@@ -150,6 +150,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:3
   .modal-mini-tbl th { font-size: 9px; padding: 4px 2px; letter-spacing: 0; }
   .modal-mini-tbl td { font-size: 11px; padding: 6px 2px; }
   .toast { font-size: 12px; padding: 12px 20px; }
+  .modal-illust { max-width: 160px; margin: 10px auto; }
+  .sz-tbl { font-size: 11px; min-width: 420px; }
+  .tbl-sec { margin-top: 20px; }
 }
 @media screen and (min-width: 600px) {
   .hd h1 { font-size: 20px; }
