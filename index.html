@@ -604,23 +604,14 @@ function runSimB() {
   var summaryText = '入力された実測値<br>（首回り: ' + nk + 'cm / 胴回り: ' + gi + 'cm / 着丈: ' + le + 'cm）<br>に基づき精密判定しました';
   renderCards(best, pr.p[li2], summaryText, pr.p, pr.c);
 }
-function renderCards(just, loose, summary, pool, cat, isOverWeight) {
+function renderCards(just, loose, summary, pool, cat) {
   var grid=gel('cand-grid'); if (!grid) return;
   grid.innerHTML='';
+  grid.style.display = '';
   var rs=gel('r-summary'); if (rs) rs.innerHTML=summary;
   var same = (just.n === loose.n);
 
-  /* 体重オーバー時の警告文とボタン */
-  function overWarnHtml(sz) {
-    return '<div class="cand-over-warn">※ 体重が目安を大きく超えています<br>サイズ感はLINEでご相談ください</div>'
-      + '<a href="https://lin.ee/ye7VJkR" target="_blank" rel="noopener" class="cand-btn-line">サイズをLINEで相談する →</a>';
-  }
-  function normalBtnHtml() {
-    return '<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
-  }
-
   if (same) {
-    /* 同サイズ時: RECOMMENDカード1枚を中央表示 */
     grid.style.gridTemplateColumns = '1fr';
     grid.style.maxWidth = '280px';
     grid.style.margin = '0 auto 24px';
@@ -630,9 +621,9 @@ function renderCards(just, loose, summary, pool, cat, isOverWeight) {
       +'<div class="cand-fit">JUST FIT</div>'
       +'<div class="cand-name">'+just.n+'</div>'
       +'<div class="cand-lbl">皮膚にしっかりフィット</div>'
-      +(isOverWeight ? overWarnHtml(just) : normalBtnHtml());
+      +'<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
     grid.appendChild(d);
-    if (!isOverWeight) d.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(just,0); });
+    d.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(just,0); });
   } else {
     grid.style.gridTemplateColumns = '';
     grid.style.maxWidth = '';
@@ -646,9 +637,9 @@ function renderCards(just, loose, summary, pool, cat, isOverWeight) {
         +'<div class="cand-fit">'+lbl+'</div>'
         +'<div class="cand-name">'+s.n+'</div>'
         +'<div class="cand-lbl">'+desc+'</div>'
-        +(isOverWeight ? overWarnHtml(s) : normalBtnHtml());
+        +'<button class="cand-btn" type="button">カラーを選択 <span style="font-size:9px;background:var(--bg);color:var(--brand-grey);padding:2px 4px;border-radius:2px;margin:0 4px">必須</span> →</button>';
       grid.appendChild(d2);
-      if (!isOverWeight) (function(obj,idx){ d2.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(obj,idx); }); })(s,i);
+      (function(obj,idx){ d2.querySelector('.cand-btn').addEventListener('click',function(){ openSzModal(obj,idx); }); })(s,i);
     }
   }
   renderSizeTbl(pool,cat,same?[just.n]:[just.n,loose.n]);
